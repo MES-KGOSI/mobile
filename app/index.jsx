@@ -22,13 +22,20 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const isWeb = width >= 768;
 
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [searchText, setSearchText] = useState("");
 
-  const toggleMenu = () => setMenuVisible(!menuVisible);
-  const toggleSearch = () => setSearchOpen(!searchOpen);
+  // toggle menu
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  // toggle search
+  const toggleSearch = () => {
+    setSearchOpen((prev) => !prev);
+  };
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -83,6 +90,7 @@ export default function HomeScreen() {
         {/* Top Navigation */}
         {!isWeb && (
           <View style={styles.topNav}>
+            {/* Logo (Left, navigates home) */}
             <Link href="/" asChild>
               <TouchableOpacity
                 onPress={() => {
@@ -95,14 +103,20 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </Link>
 
+            {/* Search (Center) */}
             <View style={styles.centerIconContainer}>
               <TouchableOpacity onPress={toggleSearch}>
                 <Ionicons name="search" size={30} color="#fff" />
               </TouchableOpacity>
             </View>
 
+            {/* Menu (Right) */}
             <TouchableOpacity onPress={toggleMenu}>
-              <Ionicons name="menu" size={32} color="#fff" />
+              <Ionicons
+                name={menuOpen ? "close" : "menu"} // switch between hamburger & close icon
+                size={32}
+                color="#fff"
+              />
             </TouchableOpacity>
           </View>
         )}
@@ -122,9 +136,9 @@ export default function HomeScreen() {
         )}
 
         {/* Dropdown Menu */}
-        {menuVisible && (
+        {menuOpen && (
           <View style={styles.menuContainer}>
-            <NavLinks onClick={() => setMenuVisible(false)} />
+            <NavLinks onClick={() => setMenuOpen(false)} />
           </View>
         )}
 
