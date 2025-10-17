@@ -1,248 +1,305 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  Image,
-  Modal,
-  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
-  useWindowDimensions,
   View,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  useWindowDimensions,
+  ImageBackground,
 } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
-import bannerMobile from "../assets/bannerMobile.png";
-import logoBlack from "../assets/logoBlack.png";
+// Import images
+import bannerMobile from "../assets/images/bannerMobile.png";
+import logoBlack from "../assets/images/logo_white.png";
 
-function ResponsiveImage({ source, widthRatio = 0.45, aspectRatio = 3, style = {} }) {
-  const { width } = useWindowDimensions();
-  const imageWidth = width * widthRatio;
-  const imageHeight = imageWidth / aspectRatio;
-
-  return (
-    <View style={styles.imageWrapper}>
-      <Image
-        source={source}
-        style={[{ width: imageWidth, height: imageHeight, resizeMode: "contain" }, style]}
-      />
-    </View>
-  );
-}
-
-export default function MobileLayout() {
+export default function HomeScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const isWeb = width >= 768;
 
   const [menuVisible, setMenuVisible] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [searchText, setSearchText] = useState("");
 
   const toggleMenu = () => setMenuVisible(!menuVisible);
   const toggleSearch = () => setSearchOpen(!searchOpen);
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "6 Months", href: "/sixmonths" },
-    { label: "6 Weeks", href: "/sixweeks" },
-    { label: "Contact", href: "/contact" },
-    { label: "Fees & Form", href: "/feesandform" },
+    { label: "6 Months", href: "/SixmonthsScreen" },
+    { label: "6 Weeks", href: "/SixweeksScreen" },
+    { label: "Contact", href: "/ContactScreen" },
   ];
-
-  const searchButtonLeft = Math.round(width / 2 - 16);
 
   const NavLinks = ({ onClick }) => (
     <View style={styles.navLinksVertical}>
       {navItems.map(({ label, href }, i) => (
-        <Link href={href} key={label} asChild>
-          <TouchableOpacity
-            onPress={() => {
-              onClick && onClick();
-              setActiveIndex(i);
-            }}
-            style={styles.navLinkItem}
+        <TouchableOpacity
+          key={label}
+          onPress={() => {
+            setActiveIndex(i);
+            onClick && onClick();
+            router.push(href);
+          }}
+          style={styles.navLinkItem}
+        >
+          <View
+            style={[
+              styles.navCircle,
+              activeIndex === i
+                ? styles.navCircleActive
+                : styles.navCircleInactive,
+            ]}
+          />
+          <Text
+            style={[
+              styles.navLinkText,
+              activeIndex === i && styles.navLinkTextActive,
+            ]}
           >
-            <View
-              style={[
-                styles.navCircle,
-                activeIndex === i ? styles.navCircleActive : styles.navCircleInactive,
-              ]}
-            />
-            <Text
-              style={[
-                styles.navLinkText,
-                activeIndex === i && styles.navLinkTextActive,
-              ]}
-            >
-              {label}
-            </Text>
-          </TouchableOpacity>
-        </Link>
+            {label}
+          </Text>
+        </TouchableOpacity>
       ))}
     </View>
   );
 
   return (
-    <View style={styles.outerContainer}>
-      <Image
+    <SafeAreaView style={styles.container}>
+      <ImageBackground
         source={bannerMobile}
-        style={StyleSheet.absoluteFill}
+        style={styles.background}
         resizeMode="cover"
-      />
+      >
+        {/* Dark overlay behind nav and text only */}
+        <View style={styles.partialOverlay} />
 
-      <View style={styles.container}>
-        <View style={styles.mobileNavBar}>
-          <TouchableOpacity
-            style={styles.logoTouchable}
-            onPress={() => router.push("/")}
-            accessibilityLabel="Go to Home"
-          >
-            <ResponsiveImage source={logoBlack} widthRatio={0.45} aspectRatio={3} />
-          </TouchableOpacity>
+        {/* Top Navigation */}
+        {!isWeb && (
+          <View style={styles.topNav}>
+            <Link href="/" asChild>
+              <TouchableOpacity
+                onPress={() => {
+                  setActiveIndex(0);
+                  router.push("/");
+                }}
+                style={styles.logoTouchable}
+              >
+                <Image source={logoBlack} style={styles.logo} />
+              </TouchableOpacity>
+            </Link>
 
-          <TouchableOpacity
-            style={[styles.searchButtonMobile, { left: searchButtonLeft }]}
-            onPress={toggleSearch}
-            accessibilityLabel="Toggle search"
-          >
-            <Ionicons name="search" size={28} color="black" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={toggleMenu}
-            style={styles.hamburgerButton}
-            accessibilityLabel="Menu toggle"
-          >
-            <Ionicons name="menu" size={32} color="black" />
-          </TouchableOpacity>
-
-          <Modal visible={menuVisible} animationType="slide" transparent={true}>
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <TouchableOpacity
-                  onPress={toggleMenu}
-                  style={styles.closeButton}
-                  accessibilityLabel="Close menu"
-                >
-                  <Ionicons name="close" size={32} color="black" />
-                </TouchableOpacity>
-                <ScrollView>
-                  <NavLinks onClick={toggleMenu} />
-                </ScrollView>
-              </View>
+            <View style={styles.centerIconContainer}>
+              <TouchableOpacity onPress={toggleSearch}>
+                <Ionicons name="search" size={30} color="#fff" />
+              </TouchableOpacity>
             </View>
-          </Modal>
-        </View>
 
+            <TouchableOpacity onPress={toggleMenu}>
+              <Ionicons name="menu" size={32} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Search Bar */}
         {searchOpen && (
-          <View style={styles.searchBoxMobile}>
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={20} color="#555" />
             <TextInput
-              placeholder="Search for courses"
+              placeholder="Search..."
+              placeholderTextColor="#777"
+              value={searchText}
+              onChangeText={setSearchText}
               style={styles.searchInput}
-              autoFocus={true}
             />
           </View>
         )}
-      </View>
-    </View>
+
+        {/* Dropdown Menu */}
+        {menuVisible && (
+          <View style={styles.menuContainer}>
+            <NavLinks onClick={() => setMenuVisible(false)} />
+          </View>
+        )}
+
+        {/* Main Content */}
+        <View style={styles.textBlock}>
+          <Text style={styles.heading}>EMPOWERING{"\n"}THE NATION</Text>
+          <View style={styles.divider} />
+          <Text style={styles.paragraph}>
+            Empowering the Nation was established in 2022 and offers courses in
+            Johannesburg. Hundreds of domestic workers and gardeners have been
+            trained on both the six-months long Learnerships and six-weeks Short
+            Skills Training Programs to empower themselves and provide more
+            marketable skills.
+          </Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/SixmonthsScreen")}
+          >
+            <Text style={styles.buttonText}>GET STARTED</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
+  container: { flex: 1 },
+  background: { flex: 1, position: "relative" },
+
+  /** Partial transparent overlay behind nav + text **/
+  partialOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.45)",
+    zIndex: 1,
   },
-  container: {
-    flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    backgroundColor: "transparent",
-    width: "100%",
-  },
-  imageWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-  },
-  mobileNavBar: {
+
+  /** NAVIGATION BAR **/
+  topNav: {
+    marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 10,
-    marginBottom: 5,
+    height: 100,
+    paddingHorizontal: 15,
+    zIndex: 2,
   },
   logoTouchable: {
-    marginLeft: -80,
+    marginLeft: -90,
   },
-  searchButtonMobile: {
+  logo: {
+    width: 250,
+    height: 100,
+    resizeMode: "contain",
+  },
+  centerIconContainer: {
     position: "absolute",
+    left: "50%",
+    height: 100,
+    justifyContent: "center",
+    transform: [{ translateX: -0 }],
   },
-  hamburgerButton: {
-    marginLeft: 15,
+
+  /** MENU **/
+  menuContainer: {
+    position: "absolute",
+    top: 120,
+    left: 15,
+    right: 15,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+    zIndex: 20,
   },
-  modalOverlay: {
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    zIndex: 20,
+  },
+  searchInput: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: "#000",
   },
-  modalContent: {
-    backgroundColor: "white",
-    paddingTop: 40,
-    paddingHorizontal: 30,
-    paddingBottom: 60,
-    minHeight: 300,
+
+  /** MAIN CONTENT **/
+  textBlock: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 25,
+    zIndex: 2,
   },
-  closeButton: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
+  heading: {
+    color: "#fff",
+    fontSize: 28,
+    fontWeight: "bold",
+    textAlign: "left",
+    letterSpacing: 10,
+    marginTop: 150,
+    marginLeft: 30,
   },
+  divider: {
+    width: 150,
+    height: 2,
+    backgroundColor: "#fff",
+    marginVertical: 10,
+    marginLeft: 30,
+  },
+  paragraph: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "left",
+    lineHeight: 24,
+    paddingRight: 20,
+    marginBottom: 25,
+    marginLeft: 30,
+  },
+  button: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    marginLeft: 30,
+  },
+  buttonText: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  /** MENU LINKS **/
   navLinksVertical: {
     flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    width: "100%",
   },
   navLinkItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 30,
-    marginRight: 20,
-    marginBottom: 15,
+    paddingVertical: 8,
   },
   navCircle: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    borderWidth: 1.5,
-    borderColor: "#000",
-    marginRight: 8,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 10,
   },
-  navCircleInactive: {
-    backgroundColor: "transparent",
-  },
-  navCircleActive: {
-    backgroundColor: "#000",
-  },
-  navLinkText: {
-    fontSize: 18,
-    color: "#181414ff",
-  },
-  navLinkTextActive: {
-    fontWeight: "bold",
-    color: "#000",
-  },
-  searchBoxMobile: {
-    width: "100%",
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    fontSize: 16,
-  },
+  navCircleActive: { backgroundColor: "#007AFF" },
+  navCircleInactive: { backgroundColor: "#ccc" },
+  navLinkText: { fontSize: 16, color: "#000" },
+  navLinkTextActive: { fontWeight: "bold", color: "#007AFF" },
 });
+
+
+
+
+
+
+
