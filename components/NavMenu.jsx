@@ -9,7 +9,6 @@ import {
 import { Link } from "expo-router";
 
 export default function NavMenu({ activeIndex, setActiveIndex, onClose }) {
-  // Include all pages here
   const navItems = [
     { label: "Home", href: "/" },
     { label: "6 Months", href: "/sixmonths" },
@@ -27,20 +26,26 @@ export default function NavMenu({ activeIndex, setActiveIndex, onClose }) {
             asChild
             onPress={() => {
               setActiveIndex(i);
-              if (typeof onClose === "function") {
-                onClose();
-              }
+              if (typeof onClose === "function") onClose();
             }}
           >
             <TouchableOpacity style={styles.navLinkItem} activeOpacity={0.7}>
-              <Text
-                style={[
-                  styles.navLinkText,
-                  activeIndex === i && styles.activeText,
-                ]}
-              >
-                {label}
-              </Text>
+              <View style={styles.linkRow}>
+                <View
+                  style={[
+                    styles.circle,
+                    activeIndex === i && styles.activeCircle,
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.navLinkText,
+                    activeIndex === i && styles.activeText,
+                  ]}
+                >
+                  {label}
+                </Text>
+              </View>
             </TouchableOpacity>
           </Link>
         ))}
@@ -69,14 +74,32 @@ const styles = StyleSheet.create({
   navLinkItem: {
     paddingVertical: 8,
   },
+  linkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   navLinkText: {
     fontSize: 16,
     color: "#000",
+    marginLeft: 8,
   },
   activeText: {
     color: "#007AFF",
     fontWeight: "bold",
   },
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#007AFF",
+  },
+  activeCircle: {
+    backgroundColor: "#007AFF",
+  },
 });
+
+
+
 
 
