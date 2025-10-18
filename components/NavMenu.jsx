@@ -31,6 +31,7 @@ export default function NavMenu({ activeIndex, setActiveIndex, onClose }) {
           >
             <TouchableOpacity style={styles.navLinkItem} activeOpacity={0.7}>
               <View style={styles.linkRow}>
+                {/* Circle is always present, just change color if active */}
                 <View
                   style={[
                     styles.circle,
@@ -71,29 +72,36 @@ const styles = StyleSheet.create({
     elevation: 6,
     zIndex: 20,
   },
+
   navLinkItem: {
     paddingVertical: 8,
   },
+
   linkRow: {
     flexDirection: "row",
     alignItems: "center",
   },
+
   navLinkText: {
     fontSize: 16,
     color: "#000",
-    marginLeft: 8,
+    marginLeft: 10, // space between circle and text
   },
+
   activeText: {
     color: "#007AFF",
     fontWeight: "bold",
   },
+
   circle: {
     width: 10,
     height: 10,
     borderRadius: 5,
     borderWidth: 2,
     borderColor: "#007AFF",
+    marginRight: 8,
   },
+
   activeCircle: {
     backgroundColor: "#007AFF",
   },

@@ -5,11 +5,12 @@ import {
   Text,
   TextInput,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import NavBar from "../components/NavBar";
 import NavMenu from "../components/NavMenu";
-
 import bannerMobile from "../assets/images/bannerMobile.png";
 
 export default function HomeScreen() {
@@ -28,37 +29,59 @@ export default function HomeScreen() {
         style={styles.background}
         resizeMode="cover"
       >
-        <NavBar
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-          onToggleMenu={toggleMenu}
-          onToggleSearch={toggleSearch}
-          isMenuOpen={menuOpen}
-        />
+        {/* Dark overlay below nav */}
+        <View style={styles.overlay} />
 
-        {searchOpen && (
-          <View style={styles.searchContainer}>
-            <Ionicons name="search" size={20} color="#555" />
-            <TextInput
-              placeholder="Search..."
-              placeholderTextColor="#777"
-              value={searchText}
-              onChangeText={setSearchText}
-              style={styles.searchInput}
-            />
-          </View>
-        )}
-
-        {menuOpen && (
-          <NavMenu
+        {/* NavBar sits ABOVE overlay */}
+        <View style={styles.navWrapper}>
+          <NavBar
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
-            onClose={() => setMenuOpen(false)}
+            onToggleMenu={toggleMenu}
+            onToggleSearch={toggleSearch}
+            isMenuOpen={menuOpen}
           />
-        )}
 
+          {searchOpen && (
+            <View style={styles.searchContainer}>
+              <Ionicons name="search" size={20} color="#555" />
+              <TextInput
+                placeholder="Search..."
+                placeholderTextColor="#777"
+                value={searchText}
+                onChangeText={setSearchText}
+                style={styles.searchInput}
+              />
+            </View>
+          )}
+
+          {menuOpen && (
+            <NavMenu
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+              onClose={() => setMenuOpen(false)}
+            />
+          )}
+        </View>
+
+        {/* Text content below nav but above overlay */}
         <View style={styles.textBlock}>
           <Text style={styles.heading}>EMPOWERING{"\n"}THE NATION</Text>
+
+          <View style={styles.line} />
+
+          <Text style={styles.paragraph}>
+            Empowering the Nation was established in 2022 and offers courses in Johannesburg.
+            Hundreds of domestic workers and gardeners have been trained on both the six-months 
+            long Learnerships and six-weeks Short Skills Training Programs to empower themselves 
+            and can provide more marketable skills. 
+          </Text>
+
+          <Link href="/sixmonths" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Get Started</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </ImageBackground>
     </View>
@@ -66,7 +89,23 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1, position: "relative" },
+  background: {
+    flex: 1,
+    position: "relative",
+  },
+
+  /* Overlay stays behind nav */
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 9, 0, 0.5)", // 50% opacity #000900
+    zIndex: 1,
+  },
+
+  /* Nav wrapper is ABOVE overlay */
+  navWrapper: {
+    zIndex: 3,
+  },
+
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -83,11 +122,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
   },
+
   textBlock: {
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
     paddingHorizontal: 25,
+    zIndex: 2, // above overlay, below nav
   },
   heading: {
     color: "#fff",
@@ -95,9 +136,40 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 10,
     marginTop: 150,
-    marginLeft: 30,
+    marginLeft: 40,
+  },
+  line: {
+    width: 160,
+    height: 2,
+    backgroundColor: "#fff",
+    marginTop: 10,
+    marginLeft: 40,
+  },
+  paragraph: {
+    color: "#fff",
+    fontSize: 20,
+    marginTop: 15,
+    marginLeft: 40,
+    marginRight: 15,
+    lineHeight: 22,
+  },
+  button: {
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    marginTop: 25,
+    marginLeft: 40,
+  },
+  buttonText: {
+    color: "#000900",
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
+
+
+
 
 
 

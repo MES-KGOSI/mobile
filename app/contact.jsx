@@ -34,12 +34,12 @@ export default function Contact() {
 
         <View style={styles.centerIconContainer}>
           <TouchableOpacity onPress={() => setSearchOpen((prev) => !prev)}>
-            <Ionicons name="search" size={30} color="#000" />
+            <Ionicons name="search" size={30} color="#000900" />
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={() => setMenuOpen((prev) => !prev)}>
-          <Ionicons name={menuOpen ? "close" : "menu"} size={32} color="#000" />
+          <Ionicons name={menuOpen ? "close" : "menu"} size={32} color="#000900" />
         </TouchableOpacity>
       </View>
 
@@ -58,10 +58,10 @@ export default function Contact() {
       {/* Search Bar */}
       {searchOpen && (
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#555" />
+          <Ionicons name="search" size={20} color="#ffffff" />
           <TextInput
             placeholder="Search..."
-            placeholderTextColor="#777"
+            placeholderTextColor="#ffffff"
             value={searchText}
             onChangeText={setSearchText}
             style={styles.searchInput}
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#535252ff",
+    backgroundColor: "#000900",
     marginHorizontal: 20,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#000900",
   },
 
   content: {
