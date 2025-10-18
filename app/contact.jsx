@@ -50,7 +50,7 @@ export default function Contact() {
           setActiveIndex={setActiveIndex}
           onClose={() => setMenuOpen(false)}
           menuBackground="#f0f0f0"
-          textColor="#000"
+          textColor="#000900"
           activeTextColor="#007AFF"
         />
       )}
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   centerIconContainer: {
     position: "absolute",
     left: "50%",
-    transform: [{ translateX: 0 }],
+    transform: [{ translateX: 10 }],
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: "#000900",
+    color: "#ffffff",
   },
 
   content: {

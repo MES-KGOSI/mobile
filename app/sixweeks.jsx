@@ -64,10 +64,10 @@ export default function SixWeeks() {
       {/* Search Bar */}
       {searchOpen && (
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#555" />
+          <Ionicons name="search" size={20} color="#000900" />
           <TextInput
             placeholder="Search..."
-            placeholderTextColor="#777"
+            placeholderTextColor="#000900"
             value={searchText}
             onChangeText={setSearchText}
             style={styles.searchInput}
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   centerIconContainer: {
     position: "absolute",
     left: "50%",
-    transform: [{ translateX: 0 }],
+    transform: [{ translateX: 10 }],
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#ffffff",
   },
 
   content: {

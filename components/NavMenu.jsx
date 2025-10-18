@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    shadowColor: "#000",
+    shadowColor: "#000900",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
     shadowRadius: 6,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 
   navLinkText: {
     fontSize: 16,
-    color: "#000",
+    color: "#000900",
     marginLeft: 10, // space between circle and text
   },
 

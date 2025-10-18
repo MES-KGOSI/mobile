@@ -44,10 +44,10 @@ export default function HomeScreen() {
 
           {searchOpen && (
             <View style={styles.searchContainer}>
-              <Ionicons name="search" size={20} color="#555" />
+              <Ionicons name="search" size={20} color="#000900" />
               <TextInput
                 placeholder="Search..."
-                placeholderTextColor="#777"
+                placeholderTextColor="#000900"
                 value={searchText}
                 onChangeText={setSearchText}
                 style={styles.searchInput}
@@ -79,7 +79,7 @@ export default function HomeScreen() {
 
           <Link href="/sixmonths" asChild>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Get Started</Text>
+              <Text style={styles.buttonText}>GET STARTED</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#000900",
   },
 
   textBlock: {
@@ -132,26 +132,27 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
     letterSpacing: 10,
-    marginTop: 150,
-    marginLeft: 40,
+    marginTop: 180,
+    marginLeft: 30,
   },
   line: {
     width: 160,
     height: 2,
     backgroundColor: "#fff",
     marginTop: 10,
-    marginLeft: 40,
+    marginLeft: 30,
   },
   paragraph: {
     color: "#fff",
     fontSize: 20,
     marginTop: 15,
-    marginLeft: 40,
+    marginLeft: 30,
     marginRight: 15,
-    lineHeight: 22,
+    lineHeight: 30,
+    textAlign: "left"
   },
   button: {
     backgroundColor: "#fff",
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 8,
     marginTop: 25,
-    marginLeft: 40,
+    marginLeft: 30,
   },
   buttonText: {
     color: "#000900",

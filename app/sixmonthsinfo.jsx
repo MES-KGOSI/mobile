@@ -34,12 +34,12 @@ export default function SixMonthsInfo() {
 
         <View style={styles.centerIconContainer}>
           <TouchableOpacity onPress={() => setSearchOpen((prev) => !prev)}>
-            <Ionicons name="search" size={30} color="#000" />
+            <Ionicons name="search" size={30} color="#000900" />
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={() => setMenuOpen((prev) => !prev)}>
-          <Ionicons name={menuOpen ? "close" : "menu"} size={32} color="#000" />
+          <Ionicons name={menuOpen ? "close" : "menu"} size={32} color="#000900" />
         </TouchableOpacity>
       </View>
 
@@ -50,7 +50,7 @@ export default function SixMonthsInfo() {
           setActiveIndex={setActiveIndex}
           onClose={() => setMenuOpen(false)}
           menuBackground="#f0f0f0"
-          textColor="#000"
+          textColor="#000900"
           activeTextColor="#007AFF"
         />
       )}
@@ -58,10 +58,10 @@ export default function SixMonthsInfo() {
       {/* Search Bar */}
       {searchOpen && (
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#555" />
+          <Ionicons name="search" size={20} color="#ffffff" />
           <TextInput
             placeholder="Search..."
-            placeholderTextColor="#777"
+            placeholderTextColor="#ffffff"
             value={searchText}
             onChangeText={setSearchText}
             style={styles.searchInput}
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   centerIconContainer: {
     position: "absolute",
     left: "50%",
-    transform: [{ translateX: 0 }],
+    transform: [{ translateX: 10 }],
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: "#000",
+    color: "#ffffff",
   },
 
   content: {
