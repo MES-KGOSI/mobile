@@ -291,6 +291,7 @@ const styles = StyleSheet.create({
   cardDesc: {
     color: "#fff",
     fontSize: 24,
+    fontWeight: "medium",
     marginBottom: 15,
     textAlign: "left",
     lineHeight: 36,

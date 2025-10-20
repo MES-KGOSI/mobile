@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   paragraph: {
     color: "#fff",
     fontSize: 20,
+    fontWeight: "medium",
     marginTop: 15,
     marginLeft: 30,
     marginRight: 15,
