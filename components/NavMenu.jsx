@@ -25,13 +25,15 @@ export default function NavMenu({ activeIndex, setActiveIndex, onClose }) {
             href={href}
             asChild
             onPress={() => {
-              setActiveIndex(i);
+              // Only call setActiveIndex if it exists
+              if (typeof setActiveIndex === "function") setActiveIndex(i);
+
+              // Call onClose if it exists
               if (typeof onClose === "function") onClose();
             }}
           >
             <TouchableOpacity style={styles.navLinkItem} activeOpacity={0.7}>
               <View style={styles.linkRow}>
-                {/* Circle is always present, just change color if active */}
                 <View
                   style={[
                     styles.circle,
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
   navLinkText: {
     fontSize: 16,
     color: "#000900",
-    marginLeft: 10, // space between circle and text
+    marginLeft: 10,
   },
 
   activeText: {
@@ -106,8 +108,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
   },
 });
-
-
-
-
-

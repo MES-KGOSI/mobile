@@ -139,6 +139,7 @@ export default function SixMonths() {
         color: "#fff",
         fontWeight: "600",
         fontSize: 20,
+        letterSpacing: 1,
       }}
     >
       MORE DETAILS HERE

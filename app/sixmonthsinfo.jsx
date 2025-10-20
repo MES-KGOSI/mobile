@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router"; // Import router
+import { useRouter } from "expo-router";
 import NavMenu from "../components/NavMenu";
 import logoBlack from "../assets/images/logoBlack.png";
 import firstAidImg from "../assets/images/firstaid.png";
@@ -23,7 +23,7 @@ export default function SixMonthsInfo() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   const courses = [
     {
@@ -79,7 +79,6 @@ export default function SixMonthsInfo() {
     <View style={styles.container}>
       {/* Top Nav */}
       <View style={styles.topNav}>
-        {/* Logo navigates to index.jsx */}
         <TouchableOpacity onPress={() => router.push("/")} style={styles.logoTouchable}>
           <Image source={logoBlack} style={styles.logo} />
         </TouchableOpacity>
@@ -283,6 +282,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 });
+
 
 
 
