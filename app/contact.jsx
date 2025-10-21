@@ -10,59 +10,104 @@ import {
   useWindowDimensions,
   Modal,
   Linking,
-  Platform,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import NavMenu from "../components/NavMenu";
 import logoBlack from "../assets/images/logoBlack.png"; // Black logo image
 
+const sixMonthsCourses = [
+  "first aid",
+  "sewing",
+  "landscaping",
+  "life skills",
+];
+const sixWeeksCourses = [
+  "child minding",
+  "cooking",
+  "garden maintenance",
+];
+
 export default function Contact() {
+  const router = useRouter();
   const { width } = useWindowDimensions();
   const [activeIndex, setActiveIndex] = useState(3); // Contact page active
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-
-  // Modal states & data
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setModalType] = useState(""); // "phone" or "email"
+  const [modalType, setModalType] = useState(""); // "phone", "email", "searchError"
   const [modalValue, setModalValue] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
 
-  // Opens modal with type and value (phone/email)
-  const openConfirmModal = (type, value) => {
+  // Opens modal with type and value (phone/email/search)
+  const openConfirmModal = (type, value, msg) => {
     setModalType(type);
     setModalValue(value);
+    setModalMessage(msg || "");
     setModalVisible(true);
   };
 
-  // Trigger the phone or email action, close modal
+  // Phone/email link handling
   const handleConfirmLink = async () => {
     setModalVisible(false);
     if (modalType === "phone") {
       Linking.openURL(`tel:${modalValue}`);
     } else if (modalType === "email") {
       const email = modalValue;
-      // Gmail web and Outlook web compose URLs (works on Android, progressive fallback)
       const gmailURL = `https://mail.google.com/mail/?view=cm&to=${email}`;
       const outlookURL = `https://outlook.live.com/mail/0/deeplink/compose?to=${email}`;
       try {
-        // Try Gmail web
         const supportedGmail = await Linking.canOpenURL(gmailURL);
-        if (supportedGmail) {
-          return Linking.openURL(gmailURL);
-        }
-      } catch(e) {}
+        if (supportedGmail) return Linking.openURL(gmailURL);
+      } catch {}
       try {
-        // Try Outlook web
         const supportedOutlook = await Linking.canOpenURL(outlookURL);
-        if (supportedOutlook) {
-          return Linking.openURL(outlookURL);
-        }
-      } catch(e) {}
-      // Fallback: open mail client
+        if (supportedOutlook) return Linking.openURL(outlookURL);
+      } catch {}
       Linking.openURL(`mailto:${email}`);
     }
+  };
+
+  // SEARCH HANDLER
+  const handleSearch = () => {
+    const term = searchText.trim().toLowerCase();
+    if (!term) return;
+    if (term === "six months courses" || term === "6 months courses") {
+      setSearchOpen(false);
+      setSearchText("");
+      router.push("/sixmonths");
+      return;
+    }
+    if (term === "six weeks courses" || term === "6 weeks courses") {
+      setSearchOpen(false);
+      setSearchText("");
+      router.push("/sixweeks");
+      return;
+    }
+    if (sixMonthsCourses.some((name) => name === term)) {
+      setSearchOpen(false);
+      setSearchText("");
+      router.push("/sixmonths");
+      return;
+    }
+    if (sixWeeksCourses.some((name) => name === term)) {
+      setSearchOpen(false);
+      setSearchText("");
+      router.push("/sixweeks");
+      return;
+    }
+    openConfirmModal(
+      "searchError",
+      "",
+      "Please search by the course name or course duration e.g. first aid, six months courses, six weeks courses"
+    );
+  };
+
+  // Cancel and clear search
+  const handleCancelSearch = () => {
+    setSearchOpen(false);
+    setSearchText("");
   };
 
   return (
@@ -110,12 +155,18 @@ export default function Contact() {
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#ffffff" />
           <TextInput
+            autoFocus
             placeholder="Search..."
             placeholderTextColor="#ffffff"
             value={searchText}
             onChangeText={setSearchText}
             style={styles.searchInput}
+            onSubmitEditing={handleSearch}
+            returnKeyType="search"
           />
+          <TouchableOpacity onPress={handleCancelSearch}>
+            <Ionicons name="close" size={20} color="#ffffff" style={styles.cancelIcon} />
+          </TouchableOpacity>
         </View>
       )}
 
@@ -124,13 +175,8 @@ export default function Contact() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* Big "01" */}
         <Text style={styles.number}>01</Text>
-
-        {/* Horizontal Line - section divider */}
         <View style={styles.sectionDivider} />
-
-        {/* Heading "CONTACT" below the line */}
         <Text style={styles.pageTitle}>CONTACT</Text>
 
         {/* Section: Contact Details */}
@@ -161,7 +207,9 @@ export default function Contact() {
           {/* Email */}
           <TouchableOpacity
             style={styles.row}
-            onPress={() => openConfirmModal("email", "info@empoweringthenation.com")}
+            onPress={() =>
+              openConfirmModal("email", "info@empoweringthenation.com")
+            }
           >
             <Image
               source={require("../assets/icons/email.png")}
@@ -171,19 +219,16 @@ export default function Contact() {
           </TouchableOpacity>
         </View>
 
-        {/* Button: Fill Out Contact Form */}
         <Link href="/feesandform" asChild>
           <TouchableOpacity style={styles.formButton}>
             <Text style={styles.formButtonText}>FILL OUT OUR CONTACT FORM</Text>
           </TouchableOpacity>
         </Link>
 
-        {/* Button: View Institution Credentials */}
         <TouchableOpacity style={styles.formButton}>
           <Text style={styles.formButtonText}>VIEW INSTITUTION CREDENTIALS</Text>
         </TouchableOpacity>
 
-        {/* Section: Find Us/Google Map */}
         <View style={styles.findUsSection}>
           <Text style={styles.findUsTitle}>FIND US</Text>
           <View style={styles.mapContainer}>
@@ -195,7 +240,6 @@ export default function Contact() {
           </View>
         </View>
 
-        {/* Social Icons Row with active links */}
         <View style={styles.socialRow}>
           <TouchableOpacity
             onPress={() => Linking.openURL("https://www.facebook.com")}
@@ -232,26 +276,36 @@ export default function Contact() {
         </View>
       </ScrollView>
 
-      {/* Confirmation Modal */}
+      {/* Modal for phone/email/search error */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalBackground}>
           <View style={styles.modalBox}>
             <Text style={styles.modalText}>
-              Would you like to get in contact with Empowering The Nation?
+              {modalType === "searchError"
+                ? modalMessage
+                : "Would you like to get in contact with Empowering The Nation?"}
             </Text>
             <View style={styles.modalButtonsRow}>
               <TouchableOpacity
                 onPress={() => setModalVisible(false)}
-                style={[styles.modalButton, styles.cancelButton]}
+                style={[
+                  styles.modalButton,
+                  styles.cancelButton,
+                  modalType === "searchError" && { flex: 1 },
+                ]}
               >
-                <Text style={[styles.modalButtonText, { color: "#000900" }]}>No</Text>
+                <Text style={[styles.modalButtonText, { color: "#ffffff" }]}>
+                  {modalType === "searchError" ? "OK" : "No"}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleConfirmLink}
-                style={[styles.modalButton, styles.confirmButton]}
-              >
-                <Text style={styles.modalButtonText}>Yes</Text>
-              </TouchableOpacity>
+              {modalType !== "searchError" && (
+                <TouchableOpacity
+                  onPress={handleConfirmLink}
+                  style={[styles.modalButton, styles.confirmButton]}
+                >
+                  <Text style={styles.modalButtonText}>Yes</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -304,6 +358,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     color: "#ffffff",
+  },
+  cancelIcon: {
+    marginLeft: 8,
   },
   content: {
     paddingTop: 60,
@@ -419,7 +476,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#007AFF",
   },
   confirmButton: {
     backgroundColor: "#007AFF",
